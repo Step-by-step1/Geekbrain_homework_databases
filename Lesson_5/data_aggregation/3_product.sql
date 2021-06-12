@@ -1,0 +1,11 @@
+CREATE DATABASE IF NOT EXISTS shop;
+USE shop;
+DROP TABLE IF EXISTS test;
+CREATE TABLE test (value BIGINT);
+INSERT INTO test VALUES (1), (2), (3), (4), (5);
+
+
+
+SELECT * FROM test;
+
+SELECT EXP(SUM(LOG(value))) FROM test;
