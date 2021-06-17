@@ -1,0 +1,12 @@
+USE shop;
+
+SELECT * FROM users;
+
+INSERT INTO orders VALUES
+(DEFAULT, 2, DEFAULT, DEFAULT),
+(DEFAULT, 3, DEFAULT, DEFAULT),
+(DEFAULT, 2, DEFAULT, DEFAULT);
+
+
+SELECT id, name FROM users WHERE id IN (SELECT user_id FROM orders);
+
