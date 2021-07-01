@@ -1,0 +1,41 @@
+CREATE DATABASE IF NOT EXISTS dates;
+USE dates;
+DROP TABLE IF EXISTS test;
+CREATE TABLE IF NOT EXISTS test (
+	id SERIAL PRIMARY KEY,
+	created_at DATE NOT NULL);
+INSERT INTO test (created_at) VALUES
+	('2018-08-01'),
+	('2018-08-04'),
+	('2018-08-16'),
+	('2018-08-17')
+;
+SELECT * FROM test;
+
+DROP TABLE IF EXISTS task_3;
+
+CREATE TEMPORARY TABLE task_3 (
+day_in_august DATE,
+matching TINYINT);
+
+
+
+DROP PROCEDURE IF EXISTS TASK3;
+
+DELIMITER //
+CREATE PROCEDURE TASK3 (IN start_day DATE)
+	BEGIN
+		DECLARE i INT DEFAULT 0;
+		WHILE i < 31 DO
+			INSERT INTO task_3 VALUES (DATE_ADD(start_day, INTERVAL i DAY),
+			day_in_august = ANY (SELECT created_at FROM test));
+			SET i = i + 1;
+		END WHILE;
+	END
+//
+
+CALL TASK3('2018-08-01');
+
+DELIMITER ;
+
+SELECT * FROM task_3;
