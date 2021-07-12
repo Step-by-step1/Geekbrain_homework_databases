@@ -1,0 +1,21 @@
+127.0.0.1:6379> hmset user1 login "u1" email "u1@mail.ru"
+OK
+127.0.0.1:6379> hmset user2 login "u2" email "u2@mail.ru"
+OK
+127.0.0.1:6379> set login:"u1" user1
+OK
+127.0.0.1:6379> set login:"u2" user2
+OK
+127.0.0.1:6379> set email:"u1@mail.ru" user1
+OK
+127.0.0.1:6379> set email:"u2@mail.ru" user2
+OK
+127.0.0.1:6379> get login:"u1"
+"user1"
+127.0.0.1:6379> hget user1 email
+"u1@mail.ru"
+127.0.0.1:6379> get email:"u2@mail.ru"
+"user2"
+127.0.0.1:6379> hget user2 login
+"u2"
+127.0.0.1:6379> 
