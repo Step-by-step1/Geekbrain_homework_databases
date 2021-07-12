@@ -1,0 +1,48 @@
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use store
+switched to db store
+> use shop
+switched to db shop
+> db.shop.insert({category: 'Fruits'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.insert({category: 'Vegetables'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.find()
+{ "_id" : ObjectId("60ebe09ac785854c1cc47508"), "category" : "Fruits" }
+{ "_id" : ObjectId("60ebe0a6c785854c1cc47509"), "category" : "Vegetables" }
+> db.shop.update({category: 'Fruits'}, {$set: {quantity_in_kgs: 50}, {price_per_kg: 100}})
+2021-07-12T16:30:39.806+1000 E QUERY    [thread1] SyntaxError: invalid property id @(shell):1:67
+> db.shop.update({category: 'Fruits'}, {$set: {quantity_in_kgs: 50}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.shop.update({category: 'Fruits'}, {$set: {price: 100}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.shop.drop()
+true
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use shop
+switched to db shop
+> db.shop.insert({category: 'Fruits'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.insert({category: 'Vegetables'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.find()
+{ "_id" : ObjectId("60ebe262c785854c1cc4750a"), "category" : "Fruits" }
+{ "_id" : ObjectId("60ebe26ac785854c1cc4750b"), "category" : "Vegetables" }
+> db.shop.update({category: 'Fruits'}, {$set: {oranges: 100}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.shop.update({category: 'Fruits'}, {$set: {apples: 150}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.shop.update({category: 'Vegetables'}, {$set: {tomatoes: 70}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.shop.update({category: 'Vegetables'}, {$set: {carrots: 75}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.shop.find()
+{ "_id" : ObjectId("60ebe262c785854c1cc4750a"), "category" : "Fruits", "oranges" : 100, "apples" : 150 }
+{ "_id" : ObjectId("60ebe26ac785854c1cc4750b"), "category" : "Vegetables", "tomatoes" : 70, "carrots" : 75 }
+> 
