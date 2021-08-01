@@ -1,17 +1,19 @@
 DROP DATABASE IF EXISTS wiki;
 CREATE DATABASE wiki;
 USE wiki;
-CREATE TABLE admins (
-id SERIAL PRIMARY KEY,
-name VARCHAR(10) NOT NULL,
-`password` VARCHAR(30) NOT NULL,
-email VARCHAR(30)
-);
 CREATE TABLE users (
 id SERIAL PRIMARY KEY,
-name VARCHAR(10) NOT NULL,
-`password` VARCHAR(30) NOT NULL,
-email VARCHAR(30)
+name VARCHAR(40) NOT NULL,
+`password` VARCHAR(40) NOT NULL,
+email VARCHAR(40)
+);
+CREATE TABLE admins (
+id SERIAL PRIMARY KEY,
+user_id BIGINT UNSIGNED NOT NULL,
+name VARCHAR(40) NOT NULL,
+`password` VARCHAR(40) NOT NULL,
+email VARCHAR(40),
+CONSTRAINT fk_user_id_admins FOREIGN KEY (user_id) REFERENCES users (id)
 );
 CREATE TABLE media_types (
 id SERIAL PRIMARY KEY,
@@ -23,11 +25,11 @@ id SERIAL PRIMARY KEY,
 );
 CREATE TABLE access_types (
 id INT UNSIGNED NOT NULL PRIMARY KEY,
-access_type CHAR(10) NOT NULL
+access_type CHAR(12) NOT NULL
 );
 CREATE TABLE media (
 id SERIAL PRIMARY KEY,
-name VARCHAR(30) NOT NULL,
+name VARCHAR(40) NOT NULL,
 media_type BIGINT UNSIGNED NOT NULL,
 created_by BIGINT UNSIGNED NOT NULL,
 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -38,28 +40,32 @@ CREATE TABLE articles (
 id SERIAL PRIMARY KEY,
 title VARCHAR(255) NOT NULL,
 contents TEXT NOT NULL,
-published_by BIGINT UNSIGNED NOT NULL,
+published_by BIGINT UNSIGNED,
 published_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-latest_ammendment_at DATETIME,
+latest_amendment_by BIGINT UNSIGNED,
+latest_amendment_at DATETIME,
 access_type INT UNSIGNED NOT NULL,
-CONSTRAINT fk_user_id_articles FOREIGN KEY (published_by) REFERENCES users(id),
-CONSTRAINT fk_access_type_articles FOREIGN KEY (access_type) REFERENCES access_types (id)
+CONSTRAINT fk_published_by_articles FOREIGN KEY (published_by) REFERENCES users(id),
+CONSTRAINT fk_access_type_articles FOREIGN KEY (access_type) REFERENCES access_types (id),
+CONSTRAINT fk_amended_by_articles FOREIGN KEY (latest_amendment_by) REFERENCES users(id)
 );
 CREATE TABLE history (
 id SERIAL PRIMARY KEY,
 article_id BIGINT UNSIGNED NOT NULL,
 contents TEXT NOT NULL,
-ammended_by BIGINT UNSIGNED NOT NULL,
-ammended_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+amended_by BIGINT UNSIGNED,
+amended_at DATETIME,
 CONSTRAINT fk_article_id_history FOREIGN KEY (article_id) REFERENCES articles (id),
-CONSTRAINT fk_ammended_by_history FOREIGN KEY (ammended_by) REFERENCES users (id)
+CONSTRAINT fk_amended_by_history FOREIGN KEY (amended_by) REFERENCES users (id)
 );
 CREATE TABLE talk (
 id SERIAL PRIMARY KEY,
+article_id BIGINT UNSIGNED NOT NULL,
 contents TEXT NOT NULL,
 published_by BIGINT UNSIGNED NOT NULL,
 published_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-CONSTRAINT fk_published_by_talk FOREIGN KEY (published_by) REFERENCES users (id)
+CONSTRAINT fk_published_by_talk FOREIGN KEY (published_by) REFERENCES users (id),
+CONSTRAINT fk_article_id_talk FOREIGN KEY (article_id) REFERENCES articles (id)
 );
 CREATE TABLE teahouse_forum_topics (
 id SERIAL PRIMARY KEY,
@@ -102,5 +108,7 @@ CONSTRAINT fk_topic_id_reference_desk_answers FOREIGN KEY (topic_id) REFERENCES 
 CONSTRAINT fk_question_id_reference_desk_questions FOREIGN KEY (question_id) REFERENCES reference_desk_questions (id),
 CONSTRAINT fk_answer_by_reference_desk_answers FOREIGN KEY (answer_by) REFERENCES users (id)
 );
+
+
 
 
